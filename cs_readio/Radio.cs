@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Threading;
 using System.Collections.ObjectModel;
+using NAudio.Wave;
 
 namespace cs_readio
 {
@@ -40,6 +41,10 @@ namespace cs_readio
         }
         bool _running;
         Task runningTask;
+        Task textTask;
+
+        Dictionary<string, string> task_queue = new Dictionary<string, string>();
+
         public string Metadata
         {
             get
@@ -64,6 +69,8 @@ namespace cs_readio
 
         public static event EventHandler<MessageLogEventArgs> OnMessageLogged;
 
+        private string last_filename = null;
+
 
         AudioPlugin audioplugin;
         public Radio(string Url)
@@ -79,7 +86,9 @@ namespace cs_readio
             OnStreamUpdate += audioplugin.OnStreamUpdate; //pluginManager.OnStreamUpdate;
             OnStreamOver += audioplugin.OnStreamOver;
             Running = true;
+            last_filename = null;
             runningTask = Task.Run(() => GetHttpStream());
+            textTask = Task.Run(() => Voice2TextTask());
         }
 
         void GetHttpStream()
@@ -101,6 +110,7 @@ namespace cs_readio
                         if (!string.IsNullOrEmpty(response.GetResponseHeader("icy-metaint")))
                             metaInt = Convert.ToInt32(response.GetResponseHeader("icy-metaint"));
                         Console.WriteLine("metaInt is :" + metaInt);
+
                         using (Stream socketStream = response.GetResponseStream())
                         {
                             byte[] buffer = new byte[16384];
@@ -114,9 +124,10 @@ namespace cs_readio
                             {
                                 if (bufferPosition >= readBytes)
                                 {
+                                    //wanto to read len,but not that much
                                     readBytes = socketStream.Read(buffer, 0, buffer.Length);
                                     bufferPosition = 0;
-                                    Console.WriteLine("Read byte: " + readBytes);
+                                    //Console.WriteLine("Read byte: " + readBytes);
                                 }
                                 if (readBytes <= 0)
                                 {
@@ -144,10 +155,11 @@ namespace cs_readio
                                         continue;
                                     }
                                 }
-
-                                //get the metadata and reset the position
+                                Console.WriteLine("bufferPosition is " + bufferPosition);
+                                //get the metadata and reset the position,hardly in here
                                 while (bufferPosition < readBytes)
                                 {
+                                    Console.WriteLine("in the inner while...");
                                     metadataSb.Append(Convert.ToChar(buffer[bufferPosition++]));
                                     metadataLength--;
                                     if (metadataLength == 0)
@@ -186,7 +198,7 @@ namespace cs_readio
         void ProcessStreamData(byte[] buffer, ref int offset, int length)
         {
             //if return ,then no sound!!!
-            Console.WriteLine("in processStreamData():offset=" + offset + ";;len=" + length);
+            //Console.WriteLine("in processStreamData():offset=" + offset + " ;len=" + length);
             if (length < 1)
                 return;
             if (OnStreamUpdate != null)
@@ -194,7 +206,7 @@ namespace cs_readio
                 byte[] data = new byte[length];
                 Buffer.BlockCopy(buffer, offset, data, 0, length);
                 OnStreamUpdate(this, new StreamUpdateEventArgs(data)); //no run no sound!!!
-                Console.WriteLine("iam here!");
+                writeBigFile(buffer, offset, length);
             }
             offset += length;
         }
@@ -224,6 +236,105 @@ namespace cs_readio
         {
             Dispose();
         }
+
+        void Voice2TextTask()
+        {
+            while (Running) {
+                //list wav files
+                foreach (var item in task_queue) {
+                    string file = item.Key;
+                    string value = item.Value;
+                    
+                    if (value == null) {
+                        string ret= Voice2Text.GetText(file);
+
+                        task_queue[file] = ret;
+                        Console.WriteLine(file + "," + ret);
+                        break;
+                    }
+                }
+            }
+        }
+
+
+
+        public void setVolumn(float vol) {
+            if (audioplugin != null)
+            {
+                audioplugin.setVolumn(vol);
+            }
+        }
+
+
+        //stream to file
+        private void writeFile(byte[] data,int len) {
+            string datadir = Directory.GetCurrentDirectory() + "\\data";
+            if (Directory.Exists(datadir) == false)
+                try
+                {
+                    Directory.CreateDirectory(datadir);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(string.Format("Handled IOException, reconnecting. Details:\n{0}\n{1}", ex.Message, ex.StackTrace));
+                }
+            DateTime now = DateTime.Now;
+            string filename = datadir + "\\" + (now.ToString("yyyyMMddhhmmss")) + "." + string.Format("{0:D3}", now.Millisecond);
+            string filename_wav = filename + ".wav";
+            FileStream fs = new FileStream(filename, FileMode.Create);
+            fs.Write(data, 0, len);
+            fs.Close();
+            /*  using (Mp3FileReader reader = new Mp3FileReader(filename))
+              {
+                  WaveFileWriter.CreateWaveFile(filename_wav, reader);
+              }*/
+            try
+            {
+                var mp3Stream = new MemoryStream(data, 0, len);
+                var mp3FileReader = new Mp3FileReader(mp3Stream);
+                WaveFileWriter.CreateWaveFile(filename_wav, mp3FileReader);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(string.Format("mp3 2 wav error, Details:\n{0}\n{1}", ex.Message, ex.StackTrace));
+            }
+        }
+        //steam to big file:every 5 seconds a big file
+        private void writeBigFile(byte[] data, int offset, int len)
+        {
+            string datadir = Directory.GetCurrentDirectory() + "\\data";
+            if (Directory.Exists(datadir) == false)
+                try
+                {
+                    Directory.CreateDirectory(datadir);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(string.Format("Handled IOException, reconnecting. Details:\n{0}\n{1}", ex.Message, ex.StackTrace));
+                }
+            DateTime now = DateTime.Now;
+            string filename = datadir + "\\" + (now.ToString("yyyyMMddHHmm")) +
+                string.Format("-{0:D2}", (now.Second / 5)) + ".data";
+            FileStream fs = new FileStream(filename, FileMode.Create | FileMode.Append);
+            fs.Write(data, offset, len);
+            fs.Close();
+
+            //如果文件名变了，则解析上一个，然后放进dic里。
+            if (null != last_filename && filename.Equals(last_filename) == false)
+            {
+                try
+                {
+                    Mp3FileReader reader = new Mp3FileReader(last_filename);
+                    string filename_wav = last_filename + ".wav";
+                    WaveFileWriter.CreateWaveFile(filename_wav, reader);
+                    task_queue.Add(filename_wav, null);
+                }
+                catch (Exception ex) { }
+            }
+
+            last_filename = filename;
+
+        }
+
     }
 
 

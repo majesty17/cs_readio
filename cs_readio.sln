@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cs_readio", "cs_readio\cs_readio.csproj", "{6C8D12F4-B8C8-426C-ADBA-3FD0314AF516}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voice2text", "voice2text\voice2text.csproj", "{5B3ABB35-2459-4174-8796-BCF658D10D93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6C8D12F4-B8C8-426C-ADBA-3FD0314AF516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C8D12F4-B8C8-426C-ADBA-3FD0314AF516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C8D12F4-B8C8-426C-ADBA-3FD0314AF516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B3ABB35-2459-4174-8796-BCF658D10D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3ABB35-2459-4174-8796-BCF658D10D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3ABB35-2459-4174-8796-BCF658D10D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3ABB35-2459-4174-8796-BCF658D10D93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

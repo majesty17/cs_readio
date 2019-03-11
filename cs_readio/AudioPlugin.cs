@@ -13,11 +13,7 @@ namespace cs_readio {
         {
             get { return "AudioPlugin"; }
         }
-        bool IsPlaying
-        {
-            get;
-            set;
-        }
+        bool IsPlaying { get; set; }
         Task playTask;
 
         public AudioPlugin()
@@ -96,7 +92,7 @@ namespace cs_readio {
                         {
                             waveOut = new WaveOut();
                             VolumeWaveProvider16 volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
-                            volumeProvider.Volume = 0.5f;
+                            volumeProvider.Volume = 1.0f;
                             waveOut.Init(volumeProvider);
                             waveOut.Play();
                         }
@@ -137,6 +133,13 @@ namespace cs_readio {
             if(playTask != null)
                 playTask.Wait();
             stream.Dispose();
+        }
+
+
+        public void setVolumn(float vol) {
+            if (waveOut != null) {
+                waveOut.Volume = vol;
+            }
         }
     }
 

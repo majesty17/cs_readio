@@ -31,6 +31,8 @@
             this.button_start = new System.Windows.Forms.Button();
             this.button_stop = new System.Windows.Forms.Button();
             this.textBox_url = new System.Windows.Forms.TextBox();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // button_start
@@ -59,18 +61,31 @@
             this.textBox_url.Name = "textBox_url";
             this.textBox_url.Size = new System.Drawing.Size(776, 26);
             this.textBox_url.TabIndex = 2;
-            this.textBox_url.Text = "http://stream.wqxr.org/wqxr";
+            this.textBox_url.Text = "http://fnradio-shoutcast-32.ng.akacast.akamaistream.net/7/115/13873/v1/auth.akaca" +
+    "st.akamaistream.net/fnradio-shoutcast-32";
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(100, 292);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(197, 61);
+            this.trackBar1.TabIndex = 3;
+            this.trackBar1.Value = 50;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.textBox_url);
             this.Controls.Add(this.button_stop);
             this.Controls.Add(this.button_start);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -81,6 +96,7 @@
         private System.Windows.Forms.Button button_start;
         private System.Windows.Forms.Button button_stop;
         private System.Windows.Forms.TextBox textBox_url;
+        private System.Windows.Forms.TrackBar trackBar1;
     }
 }
 

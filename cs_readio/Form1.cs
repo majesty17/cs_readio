@@ -21,16 +21,25 @@ namespace cs_readio
         {
             InitializeComponent();
         }
-
+        //start to play
         private async void button_start_Click(object sender, EventArgs e)
         {
             string url = textBox_url.Text.Trim();
             await PlaySource(url);
         }
+        //stop play
         private async void button_stop_Click(object sender, EventArgs e)
         {
             await StopPlaying();
         }
+        //volumn change
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            float vol = (float)((float)trackBar1.Value / 100.0);
+            radio.setVolumn(vol);
+            Console.WriteLine("volumn changed to :" + vol);
+        }
+
 
 
         private async Task PlaySource(string url)

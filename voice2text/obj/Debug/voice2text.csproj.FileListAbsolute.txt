@@ -1,0 +1,7 @@
+E:\git\cs_readio\voice2text\obj\Debug\voice2text.csproj.CoreCompileInputs.cache
+E:\git\cs_readio\voice2text\bin\Debug\voice2text.exe.config
+E:\git\cs_readio\voice2text\bin\Debug\voice2text.exe
+E:\git\cs_readio\voice2text\bin\Debug\voice2text.pdb
+E:\git\cs_readio\voice2text\obj\Debug\voice2text.exe
+E:\git\cs_readio\voice2text\obj\Debug\voice2text.pdb
+E:\git\cs_readio\voice2text\obj\Debug\voice2text.csprojAssemblyReference.cache

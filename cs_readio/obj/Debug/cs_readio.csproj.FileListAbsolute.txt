@@ -1,0 +1,14 @@
+E:\git\cs_readio\cs_readio\bin\Debug\cs_readio.exe.config
+E:\git\cs_readio\cs_readio\bin\Debug\cs_readio.exe
+E:\git\cs_readio\cs_readio\bin\Debug\cs_readio.pdb
+E:\git\cs_readio\cs_readio\bin\Debug\NAudio.dll
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.Form1.resources
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.Properties.Resources.resources
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.csproj.GenerateResource.cache
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.csproj.CoreCompileInputs.cache
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.csproj.CopyComplete
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.exe
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.pdb
+E:\git\cs_readio\cs_readio\bin\Debug\AipSdk.dll
+E:\git\cs_readio\cs_readio\bin\Debug\Newtonsoft.Json.dll
+E:\git\cs_readio\cs_readio\obj\Debug\cs_readio.csprojAssemblyReference.cache
